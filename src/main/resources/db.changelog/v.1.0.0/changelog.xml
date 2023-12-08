@@ -8,5 +8,8 @@
         <tagDatabase tag="v.1.0.0"/>
     </changeSet>
 
+    <include file="08-12-2023-01-create-user-table.xml" relativeToChangelogFile="true"/>
+    <include file="08-12-2023-02-create-task-table.xml" relativeToChangelogFile="true"/>
+    <include file="08-12-2023-03-create-comment-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
