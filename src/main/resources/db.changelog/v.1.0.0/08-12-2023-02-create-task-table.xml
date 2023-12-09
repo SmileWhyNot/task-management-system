@@ -20,11 +20,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="author_id" type="bigint">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
-            <column name="assignee_id" type="bigint">
-                <constraints unique="true"/>
-            </column>
+            <column name="assignee_id" type="bigint"/>
         </createTable>
     </changeSet>
 

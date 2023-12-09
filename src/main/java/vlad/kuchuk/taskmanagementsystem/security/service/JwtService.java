@@ -1,7 +1,6 @@
 package vlad.kuchuk.taskmanagementsystem.security.service;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vlad.kuchuk.taskmanagementsystem.security.config.JwtConfig;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
-import vlad.kuchuk.taskmanagementsystem.security.exception.ExpiredJwtTokenException;
 
 import java.security.Key;
 import java.util.Date;
@@ -37,32 +35,32 @@ public class JwtService {
         return generateToken(new HashMap<>(), userId, jwtConfig.getTokenExpirationMs());
     }
 
-    public String generateRefreshToken(Long userId) {
-        return generateToken(new HashMap<>(), userId, jwtConfig.getRefreshTokenExpirationMs());
+    public String generateToken(Map<String, Object> extraClaims, Long userId, long expirationMs) {
+        return Jwts.builder()
+                   .setClaims(extraClaims)
+                   .setSubject(String.valueOf(userId))
+                   .setIssuedAt(new Date(System.currentTimeMillis()))
+                   .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                   .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                   .compact();
     }
 
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            Long userId,
-            long expirationMs
-    ) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(String.valueOf(userId))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecretKey());
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String generateRefreshToken(Long userId) {
+        return generateToken(new HashMap<>(), userId, jwtConfig.getRefreshTokenExpirationMs());
     }
 
     public boolean isRefreshTokenNotExpired(String refreshToken) {
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(refreshToken)
-                    .getBody();
+                                .setSigningKey(getSignInKey())
+                                .build()
+                                .parseClaimsJws(refreshToken)
+                                .getBody();
 
             Date expirationDate = claims.getExpiration();
             return !expirationDate.before(new Date());
@@ -85,16 +83,10 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecretKey());
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Jwts.parserBuilder()
+                   .setSigningKey(getSignInKey())
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody();
     }
 }
