@@ -6,11 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +14,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import vlad.kuchuk.taskmanagementsystem.commonExceptionUtil.ApiError;
 import vlad.kuchuk.taskmanagementsystem.security.entity.CustomUserDetails;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 import vlad.kuchuk.taskmanagementsystem.security.service.JwtService;
-import vlad.kuchuk.taskmanagementsystem.security.service.UserService;
+import vlad.kuchuk.taskmanagementsystem.security.service.UserAuthService;
 
 import java.io.IOException;
 
@@ -32,14 +27,11 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserAuthService userAuthService;
 
     @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final Long userId;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -55,25 +47,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
-            response.getWriter().write(jsonResponse);
+            response.getWriter()
+                    .write(jsonResponse);
             return;
         }
 
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserEntity user = userService.getUserById(userId).orElseThrow(
-                    () -> new UsernameNotFoundException("User not found")
-            );
+        if (userId != null && SecurityContextHolder.getContext()
+                                                   .getAuthentication() == null) {
+            UserEntity user = userAuthService.getUserById(userId)
+                                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             CustomUserDetails userDetails = new CustomUserDetails(user);
             if (jwtService.isTokenValid(jwt, user)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                        );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext()
+                                     .setAuthentication(authToken);
             }
         }
 
