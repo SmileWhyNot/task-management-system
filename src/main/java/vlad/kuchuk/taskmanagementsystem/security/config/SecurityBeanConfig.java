@@ -12,21 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.kuchuk.taskmanagementsystem.security.entity.CustomUserDetails;
-import vlad.kuchuk.taskmanagementsystem.security.repository.UserRepository;
+import vlad.kuchuk.taskmanagementsystem.security.repository.AuthenticationRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityBeanConfig {
 
-    private final UserRepository userRepository;
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> new CustomUserDetails(
-                userRepository.findByEmail(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found"))
-        );
-    }
+    private final AuthenticationRepository authenticationRepository;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -37,12 +29,18 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public UserDetailsService userDetailsService() {
+        return username -> new CustomUserDetails(authenticationRepository.findByEmail(username)
+                                                                         .orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }

@@ -23,17 +23,13 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signing")
-    public CompletableFuture<ResponseEntity<AuthenticationResponse>> registerOrAuthenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
+    public CompletableFuture<ResponseEntity<AuthenticationResponse>> registerOrAuthenticate(@RequestBody AuthenticationRequest request) {
         return authenticationService.registerOrAuthenticateAsync(request)
-                .thenApply(ResponseEntity::ok);
+                                    .thenApply(ResponseEntity::ok);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(
-            @RequestBody RefreshTokenRequest refreshTokenRequest
-    ) {
+    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         AuthenticationResponse response = authenticationService.refresh(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.ok(response);
     }

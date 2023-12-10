@@ -4,36 +4,36 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
-import vlad.kuchuk.taskmanagementsystem.security.repository.UserRepository;
+import vlad.kuchuk.taskmanagementsystem.security.repository.AuthenticationRepository;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class UserAuthService {
 
-    private final UserRepository userRepository;
+    private final AuthenticationRepository authenticationRepository;
 
     public Optional<UserEntity> getUserById(Long id) {
-        return userRepository.findById(id);
+        return authenticationRepository.findById(id);
     }
 
     public Optional<UserEntity> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return authenticationRepository.findByEmail(email);
     }
 
     @Transactional
     public UserEntity saveUser(UserEntity user) {
-        return userRepository.save(user);
+        return authenticationRepository.save(user);
     }
 
     @Transactional
     public void updateRefreshToken(Long userId, String refreshToken) {
-        userRepository.updateRefreshToken(userId, refreshToken);
+        authenticationRepository.updateRefreshToken(userId, refreshToken);
     }
 
     boolean isRefreshTokenValid(Long userId, String providedRefreshToken) {
-        return userRepository.existsByIdAndRefreshToken(userId, providedRefreshToken);
+        return authenticationRepository.existsByIdAndRefreshToken(userId, providedRefreshToken);
     }
 }
