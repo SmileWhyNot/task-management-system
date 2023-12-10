@@ -1,4 +1,4 @@
-package vlad.kuchuk.taskmanagementsystem.tasks.dto;
+package vlad.kuchuk.taskmanagementsystem.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

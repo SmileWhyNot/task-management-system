@@ -61,7 +61,8 @@ public class TaskService {
                                        .map(userMapper::toSmallDto)
                                        .map(task::setAuthor)
                                        .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
-                                               task.getAuthor().getId())));
+                                               task.getAuthor()
+                                                                                                                    .getId())));
     }
 
     private TaskDto getAssigneeIfExistsOrNull(TaskDto task) {
@@ -72,7 +73,8 @@ public class TaskService {
                                        .map(userMapper::toSmallDto)
                                        .map(task::setAssignee)
                                        .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
-                                               task.getAssignee().getId())));
+                                               task.getAssignee()
+                                                                                                                    .getId())));
     }
 
     @Transactional
@@ -98,15 +100,18 @@ public class TaskService {
     }
 
     private Task getTaskIfCurUserIsAssignee(Task task) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
         String email = authentication.getName();
 
         return Optional.of(task)
                        .filter(t -> t.getAssignee() != null)
                        .flatMap(t -> authenticationRepository.findByEmail(email))
-                       .filter(user -> Objects.equals(user.getId(), task.getAssignee().getId()))
+                       .filter(user -> Objects.equals(user.getId(), task.getAssignee()
+                                                                        .getId()))
                        .map(user -> task)
-                       .orElseThrow(() -> new TaskOperationException("You can't change status! Task assigned to another user"));
+                       .orElseThrow(() -> new TaskOperationException("You can't change status! Task assigned to " +
+                               "another user"));
     }
 
     @Transactional

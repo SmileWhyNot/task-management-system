@@ -4,21 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import vlad.kuchuk.taskmanagementsystem.comments.dto.CommentDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Priority;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Status;
-import vlad.kuchuk.taskmanagementsystem.user.dto.SmallUserDto;
 
-import java.io.Serializable;
-import java.util.Set;
-
-/**
- * DTO for {@link vlad.kuchuk.taskmanagementsystem.tasks.entity.Task}
- */
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
-public class TaskDto implements Serializable {
+public class SmallTaskInfoResponse {
     private Long id;
 
     @NotBlank
@@ -29,10 +21,4 @@ public class TaskDto implements Serializable {
     private Status status;
 
     private Priority priority;
-
-    private Set<CommentDto> comments;
-
-    private SmallUserDto author;
-
-    private SmallUserDto assignee;
 }
