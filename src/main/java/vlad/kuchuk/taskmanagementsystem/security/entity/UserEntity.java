@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import vlad.kuchuk.taskmanagementsystem.tasks.entity.Comment;
+import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Task;
 
 import java.util.Objects;
