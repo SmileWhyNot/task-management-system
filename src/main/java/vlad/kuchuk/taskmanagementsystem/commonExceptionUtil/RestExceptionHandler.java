@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import vlad.kuchuk.taskmanagementsystem.security.exception.RefreshTokenException;
 import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskNotFoundException;
 import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskOperationException;
+import vlad.kuchuk.taskmanagementsystem.tasks.exceptions.CreateCommentException;
 import vlad.kuchuk.taskmanagementsystem.user.exception.NoSuchUserException;
 import vlad.kuchuk.taskmanagementsystem.user.exception.UserOperationException;
 
@@ -63,6 +64,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<ApiError> handleTaskNotFoundException(TaskNotFoundException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST, "TASK_NOT_FOUND: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
+    }
+
+    @ExceptionHandler(CreateCommentException.class)
+    public ResponseEntity<ApiError> handleCreateCommentException(CreateCommentException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "CREATE_COMMENT: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .body(apiError);
     }
