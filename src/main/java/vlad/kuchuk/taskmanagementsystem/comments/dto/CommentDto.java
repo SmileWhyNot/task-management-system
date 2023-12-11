@@ -1,5 +1,6 @@
 package vlad.kuchuk.taskmanagementsystem.comments.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,11 @@ import java.time.ZonedDateTime;
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
+@Schema(description = """
+                      Comment data for request and response\s
+                      Response: full info provided by Server\s
+                      Request: creationDate provided by Client is ignored. Server calculates it\s
+                      """)
 public class CommentDto implements Serializable {
     private Long id;
     @NotNull

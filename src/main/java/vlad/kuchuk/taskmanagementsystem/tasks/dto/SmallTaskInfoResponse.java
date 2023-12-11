@@ -1,5 +1,6 @@
 package vlad.kuchuk.taskmanagementsystem.tasks.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
+@Schema(description = "Small task info response without comments, author and assignee")
 public class SmallTaskInfoResponse implements Serializable {
     private Long id;
 

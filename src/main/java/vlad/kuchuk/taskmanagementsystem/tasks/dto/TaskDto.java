@@ -1,5 +1,6 @@
 package vlad.kuchuk.taskmanagementsystem.tasks.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
+@Schema(name = "TaskDto",
+        description = "Full DTO for Task entity")
 public class TaskDto implements Serializable {
     private Long id;
 

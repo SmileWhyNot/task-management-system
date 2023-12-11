@@ -1,5 +1,6 @@
 package vlad.kuchuk.taskmanagementsystem.tasks.dto.requests;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@Schema(description = "Request for getting tasks by author or assignee with filtering and pagination")
 public class FilteredPageableTasksRequest {
 
     @PositiveOrZero
