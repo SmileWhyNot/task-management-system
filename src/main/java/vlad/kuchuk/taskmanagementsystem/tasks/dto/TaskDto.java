@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import vlad.kuchuk.taskmanagementsystem.comments.dto.CommentDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Priority;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
 @Schema(name = "TaskDto",
         description = "Full DTO for Task entity")

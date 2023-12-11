@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.SmallTaskInfoResponse;
 import vlad.kuchuk.taskmanagementsystem.user.dto.SmallUserDto;
@@ -13,6 +14,7 @@ import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
 @Schema(description = """
                       Comment data for request and response\s
