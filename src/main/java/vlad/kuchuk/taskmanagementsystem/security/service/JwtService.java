@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vlad.kuchuk.taskmanagementsystem.security.config.JwtConfig;
-import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
+import vlad.kuchuk.taskmanagementsystem.user.dto.UserDto;
 
 import java.security.Key;
 import java.util.Date;
@@ -69,7 +69,7 @@ public class JwtService {
         }
     }
 
-    public boolean isTokenValid(String token, UserEntity user) {
+    public boolean isTokenValid(String token, UserDto user) {
         final Long id = extractId(token);
         return (id.equals(user.getId())) && !isTokenExpired(token);
     }
