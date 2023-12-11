@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskMapper;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.requests.FilteredPageableTasksRequest;
@@ -16,7 +15,6 @@ import vlad.kuchuk.taskmanagementsystem.user.exception.UserOperationException;
 import vlad.kuchuk.taskmanagementsystem.user.repository.UserRepository;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -33,11 +31,6 @@ public class UserService {
                              .map(userMapper::toDto)
                              .orElseThrow(() -> new NoSuchUserException(
                                      String.format("User with id = %d not found", userId)));
-    }
-
-    public UserDto getByEmail(String email) {
-        return getOptionalByEmail(email).orElseThrow(
-                () -> new NoSuchUserException(String.format("User with email = %s not found", email)));
     }
 
     public Optional<UserDto> getOptionalByEmail(String email) {

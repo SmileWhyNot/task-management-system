@@ -99,6 +99,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR,
                                          "Unhandled exception: " + ex.getMessage() + "cause: " + ex.getCause() +
                                          "\nrequestUri: " + requestUri);
+
         return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
