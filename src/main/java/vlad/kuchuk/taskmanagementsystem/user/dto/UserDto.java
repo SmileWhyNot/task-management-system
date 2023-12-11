@@ -11,9 +11,6 @@ import vlad.kuchuk.taskmanagementsystem.security.entity.Role;
 
 import java.io.Serializable;
 
-/**
- * DTO for {@link vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity}
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

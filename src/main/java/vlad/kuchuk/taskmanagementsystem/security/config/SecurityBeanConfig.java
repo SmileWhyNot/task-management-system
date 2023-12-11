@@ -33,9 +33,9 @@ public class SecurityBeanConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .map(userMapper::toDto)
-                .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                                         .map(userMapper::toDto)
+                                         .map(CustomUserDetails::new)
+                                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean

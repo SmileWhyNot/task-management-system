@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import vlad.kuchuk.taskmanagementsystem.security.exception.RefreshTokenException;
 import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskNotFoundException;
 import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskOperationException;
-import vlad.kuchuk.taskmanagementsystem.tasks.exceptions.CreateCommentException;
+import vlad.kuchuk.taskmanagementsystem.comments.exception.CreateCommentException;
 import vlad.kuchuk.taskmanagementsystem.user.exception.NoSuchUserException;
 import vlad.kuchuk.taskmanagementsystem.user.exception.UserOperationException;
 
@@ -97,7 +97,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String requestUri = ((ServletWebRequest) request).getRequest()
                                                          .getRequestURI();
         ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR,
-                "Unhandled exception: " + ex.getMessage() + "cause: " + ex.getCause() + "\nrequestUri: " + requestUri);
+                                         "Unhandled exception: " + ex.getMessage() + "cause: " + ex.getCause() +
+                                         "\nrequestUri: " + requestUri);
         return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
