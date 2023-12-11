@@ -21,5 +21,6 @@ public interface TaskMapper {
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "assignee", ignore = true)
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "comments", ignore = true)
     Task partialUpdate(TaskDto taskDto, @MappingTarget Task task);
 }

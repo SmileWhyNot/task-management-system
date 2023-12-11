@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import vlad.kuchuk.taskmanagementsystem.security.entity.Role;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
 public class UserDto implements Serializable {
     private Long id;

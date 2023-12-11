@@ -9,18 +9,14 @@ import vlad.kuchuk.taskmanagementsystem.comments.dto.CreateCommentRequest;
 import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 import vlad.kuchuk.taskmanagementsystem.comments.repository.CommentsRepository;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
-import vlad.kuchuk.taskmanagementsystem.security.repository.AuthenticationRepository;
-import vlad.kuchuk.taskmanagementsystem.security.service.UserAuthService;
-import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Task;
 import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskNotFoundException;
 import vlad.kuchuk.taskmanagementsystem.tasks.exceptions.CreateCommentException;
 import vlad.kuchuk.taskmanagementsystem.tasks.repository.TaskRepository;
-import vlad.kuchuk.taskmanagementsystem.tasks.service.TaskService;
 import vlad.kuchuk.taskmanagementsystem.user.exception.NoSuchUserException;
+import vlad.kuchuk.taskmanagementsystem.user.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -31,7 +27,7 @@ public class CommentsService {
 
     private final CommentsRepository commentsRepository;
     private final TaskRepository taskRepository;
-    private final AuthenticationRepository authenticationRepository;
+    private final UserRepository userRepository;
     private final CommentMapper commentMapper;
 
     public Set<CommentDto> getComments(Long taskId) {
@@ -54,8 +50,8 @@ public class CommentsService {
     private Comment setUpCreateCommentDto(Comment comment, CreateCommentRequest request) {
         Task task = taskRepository.findById(request.getTaskId())
                                   .orElseThrow(() -> new TaskNotFoundException(String.format("Task with id %d not found", request.getTaskId())));
-        UserEntity author = authenticationRepository.findById(request.getUserId())
-                                           .orElseThrow(() -> new NoSuchUserException(String.format("User with id %d not found", request.getUserId())));
+        UserEntity author = userRepository.findById(request.getUserId())
+                                          .orElseThrow(() -> new NoSuchUserException(String.format("User with id %d not found", request.getUserId())));
         comment.setAuthor(author);
         comment.setTask(task);
         return comment;

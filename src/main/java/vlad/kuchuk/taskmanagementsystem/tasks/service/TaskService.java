@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
-import vlad.kuchuk.taskmanagementsystem.security.repository.AuthenticationRepository;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskMapper;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.requests.AssignTaskPerformerRequest;
@@ -18,6 +17,7 @@ import vlad.kuchuk.taskmanagementsystem.tasks.exception.TaskOperationException;
 import vlad.kuchuk.taskmanagementsystem.tasks.repository.TaskRepository;
 import vlad.kuchuk.taskmanagementsystem.user.dto.UserMapper;
 import vlad.kuchuk.taskmanagementsystem.user.exception.NoSuchUserException;
+import vlad.kuchuk.taskmanagementsystem.user.repository.UserRepository;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class TaskService {
     private static final String USER_NOT_FOUND = "User with id = %d does not exist";
 
     private final TaskRepository taskRepository;
-    private final AuthenticationRepository authenticationRepository;
+    private final UserRepository userRepository;
     private final TaskMapper taskMapper;
     private final UserMapper userMapper;
 
@@ -56,11 +56,11 @@ public class TaskService {
     }
 
     private TaskDto getAuthorIfExists(TaskDto task) {
-        return authenticationRepository.findById(task.getAuthor()
-                                                     .getId())
-                                       .map(userMapper::toSmallDto)
-                                       .map(task::setAuthor)
-                                       .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
+        return userRepository.findById(task.getAuthor()
+                                           .getId())
+                             .map(userMapper::toSmallDto)
+                             .map(task::setAuthor)
+                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
                                                task.getAuthor()
                                                                                                                     .getId())));
     }
@@ -68,11 +68,11 @@ public class TaskService {
     private TaskDto getAssigneeIfExistsOrNull(TaskDto task) {
         if (Objects.isNull(task.getAssignee())) return task;
 
-        return authenticationRepository.findById(task.getAssignee()
-                                                     .getId())
-                                       .map(userMapper::toSmallDto)
-                                       .map(task::setAssignee)
-                                       .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
+        return userRepository.findById(task.getAssignee()
+                                           .getId())
+                             .map(userMapper::toSmallDto)
+                             .map(task::setAssignee)
+                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
                                                task.getAssignee()
                                                                                                                     .getId())));
     }
@@ -106,7 +106,7 @@ public class TaskService {
 
         return Optional.of(task)
                        .filter(t -> t.getAssignee() != null)
-                       .flatMap(t -> authenticationRepository.findByEmail(email))
+                       .flatMap(t -> userRepository.findByEmail(email))
                        .filter(user -> Objects.equals(user.getId(), task.getAssignee()
                                                                         .getId()))
                        .map(user -> task)
@@ -116,7 +116,7 @@ public class TaskService {
 
     @Transactional
     public TaskDto assignTaskPerformer(Long taskId, AssignTaskPerformerRequest assigneeId) {
-        Optional<UserEntity> assignee = authenticationRepository.findById(assigneeId.getAssigneeId());
+        Optional<UserEntity> assignee = userRepository.findById(assigneeId.getAssigneeId());
         if (assignee.isPresent()) {
             return taskRepository.findById(taskId)
                                  .filter(task -> Objects.isNull(task.getAssignee()))

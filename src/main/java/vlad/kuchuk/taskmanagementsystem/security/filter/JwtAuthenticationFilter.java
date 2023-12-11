@@ -10,15 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import vlad.kuchuk.taskmanagementsystem.commonExceptionUtil.ApiError;
 import vlad.kuchuk.taskmanagementsystem.security.entity.CustomUserDetails;
-import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 import vlad.kuchuk.taskmanagementsystem.security.service.JwtService;
-import vlad.kuchuk.taskmanagementsystem.security.service.UserAuthService;
+import vlad.kuchuk.taskmanagementsystem.user.dto.UserDto;
+import vlad.kuchuk.taskmanagementsystem.user.service.UserService;
 
 import java.io.IOException;
 
@@ -27,7 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserAuthService userAuthService;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -54,8 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (userId != null && SecurityContextHolder.getContext()
                                                    .getAuthentication() == null) {
-            UserEntity user = userAuthService.getUserById(userId)
-                                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            UserDto user = userService.getById(userId);
             CustomUserDetails userDetails = new CustomUserDetails(user);
             if (jwtService.isTokenValid(jwt, user)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
