@@ -12,8 +12,8 @@ import vlad.kuchuk.taskmanagementsystem.tasks.entity.Task;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("select distinct t from Task t " +
-            "where (:authorId is null or t.author.id = :authorId) " +
-            "and (:assigneeId is null or t.assignee.id = :assigneeId)")
+           "where (:authorId is null or t.author.id = :authorId) " +
+           "and (:assigneeId is null or t.assignee.id = :assigneeId)")
     Page<Task> findByAuthorIdOrAssigneeId(
             @Param("authorId") Long authorId,
             @Param("assigneeId") Long assigneeId,
