@@ -7,10 +7,12 @@ import lombok.experimental.Accessors;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Priority;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Status;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
-public class SmallTaskInfoResponse {
+public class SmallTaskInfoResponse implements Serializable {
     private Long id;
 
     @NotBlank

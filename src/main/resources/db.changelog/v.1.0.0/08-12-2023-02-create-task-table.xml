@@ -27,12 +27,14 @@
     </changeSet>
 
     <changeSet id="08-12-2023-02_1-create-task-table" author="vlad">
-        <addForeignKeyConstraint baseTableName="task" baseColumnNames="author_id" constraintName="fk_task_author" referencedTableName="_user"
+        <addForeignKeyConstraint baseTableName="task" baseColumnNames="author_id" constraintName="fk_task_author"
+                                 referencedTableName="_user"
                                  referencedColumnNames="id" onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet id="08-12-2023-02_2-create-task-table" author="vlad">
-        <addForeignKeyConstraint baseTableName="task" baseColumnNames="assignee_id" constraintName="fk_task_assignee" referencedTableName="_user"
+        <addForeignKeyConstraint baseTableName="task" baseColumnNames="assignee_id" constraintName="fk_task_assignee"
+                                 referencedTableName="_user"
                                  referencedColumnNames="id" onDelete="SET NULL"/>
     </changeSet>
 </databaseChangeLog>

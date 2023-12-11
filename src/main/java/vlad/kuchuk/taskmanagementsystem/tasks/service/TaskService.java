@@ -60,9 +60,8 @@ public class TaskService {
                                            .getId())
                              .map(userMapper::toSmallDto)
                              .map(task::setAuthor)
-                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
-                                               task.getAuthor()
-                                                                                                                    .getId())));
+                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND, task.getAuthor()
+                                                                                                          .getId())));
     }
 
     private TaskDto getAssigneeIfExistsOrNull(TaskDto task) {
@@ -72,9 +71,8 @@ public class TaskService {
                                            .getId())
                              .map(userMapper::toSmallDto)
                              .map(task::setAssignee)
-                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND,
-                                               task.getAssignee()
-                                                                                                                    .getId())));
+                             .orElseThrow(() -> new NoSuchUserException(String.format(USER_NOT_FOUND, task.getAssignee()
+                                                                                                          .getId())));
     }
 
     @Transactional
@@ -110,8 +108,8 @@ public class TaskService {
                        .filter(user -> Objects.equals(user.getId(), task.getAssignee()
                                                                         .getId()))
                        .map(user -> task)
-                       .orElseThrow(() -> new TaskOperationException("You can't change status! Task assigned to " +
-                               "another user"));
+                       .orElseThrow(() -> new TaskOperationException(
+                               "You can't change status! Task assigned to " + "another user"));
     }
 
     @Transactional
@@ -126,8 +124,8 @@ public class TaskService {
                                  })
                                  .map(taskRepository::save)
                                  .map(taskMapper::toDto)
-                                 .orElseThrow(() -> new TaskOperationException("Failed to assign task: already " +
-                                         "assigned or no such task exist"));
+                                 .orElseThrow(() -> new TaskOperationException(
+                                         "Failed to assign task: already " + "assigned or no such task exist"));
         } else throw new NoSuchUserException(String.format(USER_NOT_FOUND, assigneeId.getAssigneeId()));
     }
 

@@ -1,6 +1,9 @@
 package vlad.kuchuk.taskmanagementsystem.comments.dto;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 
 import java.util.List;
@@ -14,5 +17,6 @@ public interface CommentMapper {
     Comment toEntity(CreateCommentRequest commentDto);
 
     CommentDto toDto(Comment comment);
+
     Set<CommentDto> toDtoSet(List<Comment> comments);
 }

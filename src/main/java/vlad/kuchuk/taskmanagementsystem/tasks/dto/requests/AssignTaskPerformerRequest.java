@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class AssignTaskPerformerRequest {
     @Positive
     @NotNull
-    Long assigneeId;
+    private Long assigneeId;
 }

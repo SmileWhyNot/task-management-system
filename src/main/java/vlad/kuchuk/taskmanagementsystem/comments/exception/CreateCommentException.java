@@ -1,4 +1,4 @@
-package vlad.kuchuk.taskmanagementsystem.tasks.exceptions;
+package vlad.kuchuk.taskmanagementsystem.comments.exception;
 
 public class CreateCommentException extends RuntimeException {
 

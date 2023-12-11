@@ -24,11 +24,13 @@
         </createTable>
     </changeSet>
     <changeSet id="08-12-2023-03_1-create-comment-table" author="">
-        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="task_id" constraintName="fk_comment_task" referencedTableName="task"
+        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="task_id" constraintName="fk_comment_task"
+                                 referencedTableName="task"
                                  referencedColumnNames="id" onDelete="CASCADE"/>
     </changeSet>
     <changeSet id="08-12-2023-03_2-create-comment-table" author="">
-        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="user_id" constraintName="fk_comment_user" referencedTableName="_user"
+        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="user_id" constraintName="fk_comment_user"
+                                 referencedTableName="_user"
                                  referencedColumnNames="id" onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

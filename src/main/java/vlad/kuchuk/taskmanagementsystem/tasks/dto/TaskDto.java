@@ -12,9 +12,6 @@ import vlad.kuchuk.taskmanagementsystem.user.dto.SmallUserDto;
 import java.io.Serializable;
 import java.util.Set;
 
-/**
- * DTO for {@link vlad.kuchuk.taskmanagementsystem.tasks.entity.Task}
- */
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)

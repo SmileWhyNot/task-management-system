@@ -4,9 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.requests.AssignTaskPerformerRequest;
 import vlad.kuchuk.taskmanagementsystem.tasks.dto.requests.StatusUpdateRequest;
-import vlad.kuchuk.taskmanagementsystem.tasks.dto.TaskDto;
 import vlad.kuchuk.taskmanagementsystem.tasks.service.TaskService;
 
 @RestController
@@ -43,7 +43,8 @@ public class TaskController {
 
     @PatchMapping("/{taskId}/assignee")
     @ResponseStatus(value = org.springframework.http.HttpStatus.OK)
-    public TaskDto assignTaskPerformer(@PathVariable Long taskId, @Valid @RequestBody AssignTaskPerformerRequest assigneeId) {
+    public TaskDto assignTaskPerformer(@PathVariable Long taskId,
+                                       @Valid @RequestBody AssignTaskPerformerRequest assigneeId) {
         return taskService.assignTaskPerformer(taskId, assigneeId);
     }
 

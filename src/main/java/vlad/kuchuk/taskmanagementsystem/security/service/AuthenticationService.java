@@ -36,8 +36,8 @@ public class AuthenticationService {
 
     private AuthenticationResponse authenticate(AuthenticationRequest request, UserDto user) {
         log.info("Method to authenticate User started");
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
-                request.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         var jwtToken = jwtService.generateToken(user.getId());
         String newRefreshToken = jwtService.generateRefreshToken(user.getId());
