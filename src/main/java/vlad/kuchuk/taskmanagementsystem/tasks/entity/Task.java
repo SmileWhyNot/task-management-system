@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 
 import java.util.Objects;
@@ -57,7 +58,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && status == task.status && priority == task.priority;
+        return Objects.equals(id, task.id) && Objects.equals(title, task.title) &&
+               Objects.equals(description, task.description) && status == task.status && priority == task.priority;
     }
 
     @Override

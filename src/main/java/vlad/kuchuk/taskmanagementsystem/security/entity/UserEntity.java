@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import vlad.kuchuk.taskmanagementsystem.tasks.entity.Comment;
+import vlad.kuchuk.taskmanagementsystem.comments.entity.Comment;
 import vlad.kuchuk.taskmanagementsystem.tasks.entity.Task;
 
 import java.util.Objects;
@@ -58,7 +58,9 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && role == that.role && Objects.equals(refreshToken, that.refreshToken);
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email) &&
+               Objects.equals(password, that.password) && role == that.role &&
+               Objects.equals(refreshToken, that.refreshToken);
     }
 
     @Override
