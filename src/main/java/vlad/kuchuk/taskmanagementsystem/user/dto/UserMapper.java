@@ -1,6 +1,8 @@
 package vlad.kuchuk.taskmanagementsystem.user.dto;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.WARN, componentModel = MappingConstants.ComponentModel.SPRING)
