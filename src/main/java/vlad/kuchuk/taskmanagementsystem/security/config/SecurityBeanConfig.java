@@ -12,13 +12,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.kuchuk.taskmanagementsystem.security.entity.CustomUserDetails;
-import vlad.kuchuk.taskmanagementsystem.security.repository.AuthenticationRepository;
+import vlad.kuchuk.taskmanagementsystem.user.dto.UserMapper;
+import vlad.kuchuk.taskmanagementsystem.user.repository.UserRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityBeanConfig {
 
-    private final AuthenticationRepository authenticationRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -30,8 +32,10 @@ public class SecurityBeanConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> new CustomUserDetails(authenticationRepository.findByEmail(username)
-                                                                         .orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        return username -> userRepository.findByEmail(username)
+                .map(userMapper::toDto)
+                .map(CustomUserDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import vlad.kuchuk.taskmanagementsystem.security.dto.AuthenticationRequest;
 import vlad.kuchuk.taskmanagementsystem.security.dto.AuthenticationResponse;
 import vlad.kuchuk.taskmanagementsystem.security.entity.Role;
-import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 import vlad.kuchuk.taskmanagementsystem.security.exception.RefreshTokenException;
+import vlad.kuchuk.taskmanagementsystem.user.dto.UserDto;
+import vlad.kuchuk.taskmanagementsystem.user.service.UserService;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -20,19 +21,20 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class AuthenticationService {
 
-    private final UserAuthService userAuthService;
+    private final UserService userService;
+    private final RefreshService refreshService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public CompletableFuture<AuthenticationResponse> registerOrAuthenticateAsync(AuthenticationRequest request) {
-        Optional<UserEntity> existingUser = userAuthService.findByEmail(request.getEmail());
+        Optional<UserDto> user = userService.getOptionalByEmail(request.getEmail());
 
-        return existingUser.map(userEntity -> CompletableFuture.completedFuture(authenticate(request, userEntity)))
-                           .orElseGet(() -> registerAsync(request));
+        return user.map(userEntity -> CompletableFuture.completedFuture(authenticate(request, user.get())))
+                   .orElseGet(() -> registerAsync(request));
     }
 
-    private AuthenticationResponse authenticate(AuthenticationRequest request, UserEntity user) {
+    private AuthenticationResponse authenticate(AuthenticationRequest request, UserDto user) {
         log.info("Method to authenticate User started");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
@@ -41,7 +43,7 @@ public class AuthenticationService {
         String newRefreshToken = jwtService.generateRefreshToken(user.getId());
 
         user.setRefreshToken(newRefreshToken);
-        userAuthService.saveUser(user);
+        userService.save(user);
 
         log.info("Exiting authenticate method");
         return AuthenticationResponse.builder()
@@ -53,17 +55,15 @@ public class AuthenticationService {
     private CompletableFuture<AuthenticationResponse> registerAsync(AuthenticationRequest request) {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Method to register User started");
-            var user = UserEntity.builder()
-                                 .email(request.getEmail())
-                                 .password(passwordEncoder.encode(request.getPassword()))
-                                 .role(Role.USER)
-                                 .build();
+            UserDto user = new UserDto().setEmail(request.getEmail())
+                                        .setPassword(passwordEncoder.encode(request.getPassword()))
+                                        .setRole(Role.USER);
 
-            user = userAuthService.saveUser(user);
+            user = userService.save(user);
 
             var refreshToken = jwtService.generateRefreshToken(user.getId());
             user.setRefreshToken(refreshToken);
-            userAuthService.saveUser(user);
+            userService.save(user);
 
             var jwtToken = jwtService.generateToken(user.getId());
 
@@ -79,12 +79,12 @@ public class AuthenticationService {
         if (jwtService.isRefreshTokenNotExpired(refreshToken)) {
             Long userId = jwtService.extractId(refreshToken);
 
-            if (userAuthService.isRefreshTokenValid(userId, refreshToken)) {
+            if (refreshService.isRefreshTokenValid(userId, refreshToken)) {
 
                 String newAccessToken = jwtService.generateToken(userId);
                 String newRefreshToken = jwtService.generateRefreshToken(userId);
 
-                userAuthService.updateRefreshToken(userId, newRefreshToken);
+                refreshService.updateRefreshToken(userId, newRefreshToken);
 
                 return AuthenticationResponse.builder()
                                              .token(newAccessToken)

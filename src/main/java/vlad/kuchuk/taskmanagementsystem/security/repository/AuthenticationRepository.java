@@ -7,12 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vlad.kuchuk.taskmanagementsystem.security.entity.UserEntity;
 
-import java.util.Optional;
-
 @Repository
 public interface AuthenticationRepository extends JpaRepository<UserEntity, Long> {
-
-    Optional<UserEntity> findByEmail(String email);
 
     @Modifying
     @Query("UPDATE UserEntity u SET u.refreshToken = :refreshToken WHERE u.id = :userId")
