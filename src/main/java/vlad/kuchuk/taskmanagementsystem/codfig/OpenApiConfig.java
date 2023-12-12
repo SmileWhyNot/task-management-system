@@ -48,6 +48,7 @@ public class OpenApiConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                              .pathsToMatch("/api/v1/**")
+                             .group("Task Management System API")
                              .displayName("Task Management System API")
                              .build();
     }
