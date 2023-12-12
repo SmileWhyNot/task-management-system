@@ -32,44 +32,58 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiError handleBadCredentialsException(BadCredentialsException ex) {
-        return new ApiError(UNAUTHORIZED, "INVALID_CREDENTIAL_DATA");
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, "INVALID_CREDENTIAL_DATA");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(apiError);
     }
 
     @ExceptionHandler(RefreshTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiError handleRefreshTokenException(RefreshTokenException ex) {
-        return new ApiError(UNAUTHORIZED, "INVALID_REFRESH_TOKEN");
+    public ResponseEntity<ApiError> handleRefreshTokenException(RefreshTokenException ex) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, "INVALID_REFRESH_TOKEN");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(apiError);
     }
 
     @ExceptionHandler(NoSuchUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleNoSuchUserException(NoSuchUserException ex) {
-        return new ApiError(BAD_REQUEST, "USER_NOT_FOUND: " + ex.getMessage());
+    public ResponseEntity<ApiError> handleNoSuchUserException(NoSuchUserException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "USER_NOT_FOUND: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @ExceptionHandler(UserOperationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleUserOperationException(UserOperationException ex) {
-        return new ApiError(BAD_REQUEST, "USER_OPERATION: " + ex.getMessage());
+    public ResponseEntity<ApiError> handleUserOperationException(UserOperationException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "USER_OPERATION: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @ExceptionHandler(TaskOperationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleTaskOperationException(TaskOperationException ex) {
-        return new ApiError(BAD_REQUEST, "TASK_OPERATION: " + ex.getMessage());
+    public ResponseEntity<ApiError> handleTaskOperationException(TaskOperationException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "TASK_OPERATION: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleTaskNotFoundException(TaskNotFoundException ex) {
-        return new ApiError(BAD_REQUEST, "TASK_NOT_FOUND: " + ex.getMessage());
+    public ResponseEntity<ApiError> handleTaskNotFoundException(TaskNotFoundException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "TASK_NOT_FOUND: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @ExceptionHandler(CreateCommentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleCreateCommentException(CreateCommentException ex) {
-        return new ApiError(BAD_REQUEST, "CREATE_COMMENT: " + ex.getMessage());
+    public ResponseEntity<ApiError> handleCreateCommentException(CreateCommentException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "CREATE_COMMENT: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @Nullable
@@ -93,17 +107,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError constraintViolationException(ConstraintViolationException ex) {
-        return new ApiError(BAD_REQUEST, "NOT_PASSED_VALIDATION: " + ex.getMessage());
+    public ResponseEntity<ApiError> constraintViolationException(ConstraintViolationException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "NOT_PASSED_VALIDATION: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(apiError);
     }
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleOtherExceptions(Exception ex, WebRequest request) {
+    public ResponseEntity<ApiError> handleOtherExceptions(Exception ex, WebRequest request) {
         String requestUri = ((ServletWebRequest) request).getRequest()
                                                          .getRequestURI();
-        return new ApiError(INTERNAL_SERVER_ERROR,
-                            "Unhandled exception: " + ex.getMessage() + "cause: " + ex.getCause() +
-                            "\nrequestUri: " + requestUri);
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR,
+                                         "Unhandled exception: " + ex.getMessage() + "cause: " + ex.getCause() +
+                                         "\nrequestUri: " + requestUri);
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
